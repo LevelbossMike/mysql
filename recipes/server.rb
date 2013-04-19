@@ -91,9 +91,15 @@ if platform_family?('windows')
 end
 
 node['mysql']['server']['packages'].each do |package_name|
-  package package_name do
-    action :install
-    notifies :start, "service[mysql]", :immediately
+  if platform_family?(%w{mac_os_x})
+    package package_name do
+      action :install
+    end
+  else
+    package package_name do
+      action :install
+      notifies :start, "service[mysql]", :immediately
+    end
   end
 end
 
